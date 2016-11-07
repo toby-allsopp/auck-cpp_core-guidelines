@@ -1,0 +1,298 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>C++ Core Guildelines</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+     var link = document.createElement( 'link' );
+     link.rel = 'stylesheet';
+     link.type = 'text/css';
+     link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+     document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <style>
+     .reveal blockquote {
+       background: rgb(160, 160, 255);
+     }
+     .reveal .bqcite {
+       width: 70%;
+       margin: 20px auto;
+       font-size: 50%;
+       text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>The C++ Core Guidelines</h1>
+          <h2>Auckland C++ Meetup 2016-11-08</h2>
+          <p>Toby Allsopp
+            <p><a href="mailto:toby@mi6.gen.nz">toby@mi6.gen.nz</a>
+        </section>
+        <section>
+          <section>
+            <h2>Introduction</h2>
+            <blockquote cite="The C++ Core Guidelines">
+              “Within C++ is a smaller, simpler, safer language struggling to
+              get out.”<br>&mdash;Bjarne Stroustrup
+            </blockquote>
+          </section>
+          <section>
+            <h3>What?</h3>
+            <ul>
+              <li class="fragment">A document: <a href="http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines">isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines</a></li>
+              <li class="fragment">A collaborative open-source project: <a href="https://github.com/isocpp/CppCoreGuidelines">https://github.com/isocpp/CppCoreGuidelines</a></li>
+            </ul>
+            <blockquote class="fragment" cite="The C++ Core Guidelines">a set of guidelines for using C++ well… to help people to use modern C++ effectively</blockquote></li>
+          </section>
+          <section>
+            <h3>Who?</h3>
+            <div class="fragment">
+              <blockquote cite="The C++ Core Guidelines">
+                The C++ Core Guidelines are a collaborative effort led by
+                Bjarne Stroustrup, much like the C++ language itself.
+              </blockquote>
+            </div>
+            <ul>
+              <li class="fragment">Editors:
+                <ul>
+                  <li>Bjarne Stroustrup</li>
+                  <li>Herb Sutter</li>
+                </ul>
+              </li>
+              <li class="fragment">Contributors: <a href="https://github.com/isocpp/CppCoreGuidelines/graphs/contributors">136</a></li>
+            </ul>
+          </section>
+          <section>
+            <h3>When?</h3>
+            <ul>
+              <li class="fragment">Announced at CppCon 2015 in keynotes by Bjarne Stroustrup and Herb Sutter</li>
+              <li class="fragment">Watch the videos: </li>
+            </ul>
+            <div class="fragment">
+              <iframe width="560" height="315" data-src="https://www.youtube.com/embed/1OEu9C51K2A" frameborder="0" allowfullscreen></iframe>
+              <iframe width="560" height="315" data-src="https://www.youtube.com/embed/hEx5DNLWGgA" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </section>
+          <section>
+            <h3>Where?</h3>
+            <span class="fragment">GitHub, of course!</span>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Let's take a look...</h2>
+            <a href="http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines">http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines</a>
+          </section>
+        </section>
+        <section>
+          <section data-markdown>
+            <script type="text/template">
+             ## The **G**uideline **S**upport **L**ibrary
+
+             - Some of the rules mention utilities from a companion library, e.g.
+
+               - `gsl::owner`
+               - `gsl::not_null`
+
+             - There is an implementation on GitHub (of course):
+               <https://github.com/Microsoft/GSL>
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="text/template">
+             ### `gsl::owner`
+
+             ~~~c++
+template <class T>
+using owner = T;
+             ~~~
+
+             - <!-- .element: class="fragment" --> That's it
+             - <!-- .element: class="fragment" --> Purely documentary
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="text/template">
+             ### `gsl::not_null`
+
+             ~~~c++
+// Restricts a pointer or smart pointer to only hold non-null values.
+//
+// Has zero size overhead over T.
+//
+// If T is a pointer (i.e. T == U*) then
+// - allow construction from U* or U&
+// - disallow construction from nullptr_t
+// - disallow default construction
+// - ensure construction from U* fails with nullptr
+// - allow implicit conversion to U*
+             ~~~
+            </script>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Enforcement</h2>
+            <blockquote cite="The C++ Core Guidelines">Rules with no enforcement are unmanageable for large code bases. </blockquote>
+            <aside class="notes">Enforcement is an important part of the philosphy of the Guidelines.</aside>
+          </section>
+          <section>
+            <blockquote cite="The C++ Core Guidelines">Each rule has an Enforcement section listing ideas for
+              enforcement. Enforcement might be by code review, by static
+              analysis, by compiler, or by run-time checks. </blockquote>
+          </section>
+          <section>
+            <h3>Profiles</h3>
+            <blockquote cite="The C++ Core Guidelines">
+              A “profile” is a set of deterministic and portably enforceable
+              subset rules (i.e., restrictions) that are designed to achieve a
+              specific guarantee.
+            </blockquote>
+          </section>
+          <section>
+            There are three profiles currently defined:
+            <blockquote cite="The C++ Core Guidelines">
+              <ul>
+                <li>Pro.type: Type safety</li>
+                <li>Pro.bounds: Bounds safety</li>
+                <li>Pro.lifetime: Lifetime safety</li>
+              </ul>
+            </blockquote>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Tools</h2>
+            <p>The Guidelines are big on "mechanical" enforcement but where are the tools to do this?</p>
+            <ul>
+              <span class="fragment"><li>Visual Studio</li></span>
+              <span class="fragment"><li>clang-tidy</li></span>
+            </ul>
+          </section>
+          <section>
+            <h3>clang-tidy</h3>
+            <p>As of clang-3.9, only a handful of checks implemented:</p>
+            <pre>$ clang-tidy -checks='-*,cppcoreguidelines-*' -list-checks
+Enabled checks:
+    cppcoreguidelines-c-copy-assignment-signature
+    cppcoreguidelines-interfaces-global-init
+    cppcoreguidelines-pro-bounds-array-to-pointer-decay
+    cppcoreguidelines-pro-bounds-constant-array-index
+    cppcoreguidelines-pro-bounds-pointer-arithmetic
+    cppcoreguidelines-pro-type-const-cast
+    cppcoreguidelines-pro-type-cstyle-cast
+    cppcoreguidelines-pro-type-member-init
+    cppcoreguidelines-pro-type-reinterpret-cast
+    cppcoreguidelines-pro-type-static-cast-downcast
+    cppcoreguidelines-pro-type-union-access
+    cppcoreguidelines-pro-type-vararg
+            </pre>
+          </section>
+          <section>
+            <h3>Using clang-tidy</h3>
+            <ul>
+              <li>Requires a compilation database (<code>compile_commands.json</code>)</li>
+              <li>CMake can create one automatically
+                <ul>
+                  <li><code>set(CMAKE_EXPORT_COMPILE_COMMANDS ON)</code></li>
+                </ul></li>
+            </ul>
+            <pre>$ clang-tidy -p build/ -checks='cppcoreguidelines-*' *.cpp</pre>
+          </section>
+          <section>
+            <pre><code class="c++" data-trim>
+int f(int *a, int i) {
+  return a[i];
+}
+
+int main() {
+  int a[] = {1, 2, 3};
+  const int *p = a;
+  (void) a[f((int*)p, 0)];
+}
+            </code></pre>
+            <pre><code class="lang-none" style="max-height: 300px" data-trim data-nohighlight>
+example-clang.cpp:2:10: warning: do not use pointer arithmetic [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+  return a[i];
+         ^
+example-clang.cpp:7:18: warning: do not implicitly decay an array into a pointer; consider using gsl::array_view or an explicit cast instead [cppcoreguidelines-pro-bounds-array-to-pointer-decay]
+  const int *p = a;
+                 ^
+example-clang.cpp:8:10: warning: do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index]
+  (void) a[f((int*)p, 0)];
+         ^
+example-clang.cpp:8:14: warning: do not use C-style cast to cast away constness [cppcoreguidelines-pro-type-cstyle-cast]
+  (void) a[f((int*)p, 0)];
+             ^
+            </code></pre>
+          </section>
+          <section>
+            <h3>Visual Studio</h3>
+            <ul>
+              <li class="fragment">Requires at least Visual Studio 2015 Update 1</li>
+              <li class="fragment">Just install a NuGet package and turn on Code Analysis</li>
+              <li class="fragment">Instructions are at <a href="https://msdn.microsoft.com/en-us/library/mt762841.aspx">https://msdn.microsoft.com/en-us/library/mt762841.aspx</a></li>
+              <li class="fragment">Not really clear which checks are implemented</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>So...</h2>
+            <ul>
+              <li class="fragment">Go and <span class="fragment strike">read</span><strong class="fragment"> skim</strong> the document</li>
+              <li class="fragment">Stuff you agree with: <span class="fragment"><strong>adopt</strong></span></li>
+              <li class="fragment">Stuff you don't understand: <span class="fragment"><strong>learn</strong></span></li>
+              <li class="fragment">Stuff you disagree with: <span class="fragment"><strong>reflect</strong></span></li>
+              <li class="fragment">Contribute!</li>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+     // More info https://github.com/hakimel/reveal.js#configuration
+     Reveal.initialize({
+       width: "100%",
+       height: "100%",
+       controls: false,
+       history: true,
+       previewLinks: true,
+
+       // More info https://github.com/hakimel/reveal.js#dependencies
+       dependencies: [
+         { src: 'plugin/markdown/marked.js' },
+         { src: 'plugin/markdown/markdown.js' },
+         { src: 'plugin/notes/notes.js', async: true },
+         { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+       ]
+     });
+    </script>
+
+    <script>
+		  var bq_nodes = document.querySelectorAll( 'blockquote' );
+
+		  for( var i = 0, len = bq_nodes.length; i < len; i++ ) {
+			  var element = bq_nodes[i];
+        element.outerHTML += ('<div class="bqcite">—' + element.getAttribute('cite') + '</div>');
+      }
+    </script>
+  </body>
+</html>

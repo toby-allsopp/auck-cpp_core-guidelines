@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/toby/projects/auck_c++_meetup_core_guidelines",
+  "command": "/usr/bin/clang++    -Wall -Wextra -pedantic   -std=gnu++14 -o example.clang.o -c example-clang.cpp",
+  "file": "/home/toby/projects/auck_c++_meetup_core_guidelines/example-clang.cpp"
+}
+]
